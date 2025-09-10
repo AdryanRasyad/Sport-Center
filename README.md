@@ -10,7 +10,8 @@ Pada aplikasi main, saya buka views.py dan membuat fungsi show_main yang menerim
 -Membuat sebuah routing pada urls.py aplikasi main untuk memetakan fungsi yang telah dibuat pada views.py. :
 Mengimpor views ke dalam urls.py pada aplikasi main dilakukan agar fungsi yang sudah dibuat dapat dipanggil melalui routing, misalnya dengan menggunakan path('', views.show_name, name='show_name')
 
-2. 
+2. ![S__7839747](https://github.com/user-attachments/assets/ee6e5d9b-e0a1-4c8a-9a93-f04fb99e5ae3)
+
 
 3. Peran settings.py dalam proyek Django:
 Peran settings.py adalah sebagai konfigurasi utama yang isinya pengaturan aplikasi, seperti konfigurasi database, daftar aplikasi yang digunakan, middleware, template, zona waktu, bahasa,serta pengaturan keamanan. Secara singkat, settings.py menentukan bagaimana proyek Django dijalankan baik di lingkungan development maupun production.
