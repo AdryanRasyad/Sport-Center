@@ -20,3 +20,5 @@ Peran settings.py adalah sebagai konfigurasi utama yang isinya pengaturan aplika
 Ketika kita menjalankan python manage.py makemigrations, Django membaca perubahan pada model dan membuat file migrasi. Setelah itu, saat kita jalankan python manage.py migrate, Django akan mengeksekusi file migrasi tersebut ke database.
 
 5. Menurut saya Django menjadi framework yang digunakan untuk permulaan karena menggunakan bahasa python yang mudah dipahami pemula, menyediakan fitur bawaan sehingga tidak harus membuat kode dari awal, dan dapat beroprasi di berbagai OS (Windows, MacOS, dan Linux).
+
+link PWS : https://adryan-muhammad-sportcenter.pbp.cs.ui.ac.id
