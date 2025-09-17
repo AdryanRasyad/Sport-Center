@@ -73,6 +73,9 @@ Pertama, saya membuat file create_product.html. Untuk menampilka form, saya mena
 5) Membuat halaman yang menampilkan detail dari setiap data objek model.
 Pertama, saya membuat file product_detail.html. Di bagian atas, saya membuat tombol "Back to Catalog" yang jika diclick, akan kembali ke menu utama. Di bawahnya, saya menampilkan nama produk yang diikuti oleh kategori, label featured, dan tanggal produk dibuat, serta gambar thumbnail yang ditampilkan dengan ukuran lebar 300px. Selanjutnya, saya juga memasukkan deskripsi produk dan harga.
 
+link pws : https://adryan-muhammad-sportcenter.pbp.cs.ui.ac.id
+
+
 <img width="1440" height="900" alt="Screenshot 2025-09-17 at 07 56 17" src="https://github.com/user-attachments/assets/f4d3f9b5-0633-4571-b217-f308f3f0ef03" />
 <img width="1440" height="900" alt="Screenshot 2025-09-17 at 07 57 01" src="https://github.com/user-attachments/assets/33ccc6e5-8776-4c11-8123-316394d8a52c" />
 <img width="1440" height="900" alt="Screenshot 2025-09-17 at 07 57 31" src="https://github.com/user-attachments/assets/4762edc7-b381-413f-bfc1-3b48cc205b18" />
