@@ -1,24 +1,76 @@
-1. Penjelasan setiap checklist:
-- Membuat sebuah proyek django baru:
-Pertama, saya membuat direktori sport-center. Selanjutnya, saya menginstal django dan beberapa dependencies lainnya yang diperlukan dengan menuliskannya pada file requirements.txt yang kemudian di-install melalui terminal. Setelah itu, saya membuatJe file .env dan .env.prod. .env digunakan untuk development lokal sehingga aplikasi akan menggunakan database SQLite. Sedangkan, .env.prod digunakan untuk production deployment. Dengan PRODUCTION=True, maka aplikasi akan menggunakan database PostgreSQL. Langkah selanjutnya adalah memodifikasi settings.py agar program dapat mengakses environment variables yang sudah dibuat pada .env dan .env.prod.Selain itu, saya juga menambahkan "localhost", "127.0.0.1" (perangkat saya sendiri) ke dalam list ALLOWED_HOST. Kemudian, saya menambahkan konfigurasi PRODUCTION yang berfungsi untuk membedakan antara development dan production. Adapun konfigurasi database yang saya tambahkan yang di mana jika PRODUCTION=True, maka Django akan memakai PostgreSQL yang kredensialnya serupa dengan environment variables. Jika PRODUCTION=False, maka Django akan memakai SQLite untuk development lokal. Langkah berikutnya adalah migrasi databse melalui terminal dengan perintah python3 manage.py migrate. Setelah itu server dijalankan dengan python3 manage.py runserver.
-- Membuat aplikasi dengan nama "main" & Membuat model pada aplikasi main dengan nama Product:
-Untuk membuat aplikasi baru bernama "main", saya menjalankan perintah python manage.py startapp main. Aplikasi ini perlu didaftarkan ke dalam proyek dengan cara menambahkan "main" pada INSTALLED_APPS yang terdapat di settings.py. Dalam direktori "main", saya menambahkan direktori template yang berisi main.html untuk menampilkan nama aplikasi, nama saya, dan kelas. Selanjutnya, dalam models.py, saya membuat CATEGORY_CHOICES dan fields name, price, description, thumbnail, category, serta is_featured. Setelah itu, saya migrasi model agar Django melacak perubahan model basis data. Lengkah berikutnya adalah menghubungkan view dengan template yang diawal dengan import render untuk render tampilan HTML. Saya juga menambahkan fungsi show_main yang mengatur permintaan HTTP dan mengembalikan tampilan yang sesuai. 
-- Routing:
-Dalam direktori main, saya membuat file urls.py yang isinya meng-import path dari django.urls dan show_main dari main.views (Akan dipanggil saat URL cocok dengan pola yang ditentukan). app_name = 'main' dipakai untuk memberi namespace unik pada URL sebuah aplikasi, supaya tidak bentrok jika ada banyak app di proyek Django, urlpatterns adalah daftar rute (route) yang didefinisikan dengan fungsi, dan untuk name=show_main sebenarnya opsional yang berguna untuk reverse URL nantinya. Terakhir, saya meng-import path dan include pada urls.py yang ada dalam direktori sport-center untuk mengimpor pola rute URL dari aplikasi main (include) dan mendefinisikan pola URL (path). Pada urlpatterns saya menambahkan path('', include('main.urls')) untuk mengarahkan semua request dengan URL ("").
-- Membuat sebuah fungsi pada views.py
-Pada aplikasi main, saya buka views.py dan membuat fungsi show_main yang menerima request lalu membuat dictionary context berisi data seperti nama dan kelas, kemudian mengirimkan data tersebut ke template main.html agar dapat ditampilkan di halaman web.
--Membuat sebuah routing pada urls.py aplikasi main untuk memetakan fungsi yang telah dibuat pada views.py. :
-Mengimpor views ke dalam urls.py pada aplikasi main dilakukan agar fungsi yang sudah dibuat dapat dipanggil melalui routing, misalnya dengan menggunakan path('', views.show_name, name='show_name')
+1. Jelaskan mengapa kita memerlukan data delivery dalam pengimplementasian sebuah platform?
+Data delivery menjadi bagian yang esensial dalam implementasi sebuah platform. Data delivery memastikan agar interaksi data atau pertukaran data berjalan dengan benar. Tanpa data delivery, informasi hanya tersimpan, tidak bisa ditampilkan atau dimanfaatkan pada webiste. Selain itu, data delivery memastikan pertukaran informasi berlangsung cepat, aman, konsisten, dan efisien sehingga pengalaman pengguna menjadi lebih baik serta platform dapat tetap berjalan meski jumlah pengguna meningkat.
 
-2. ![S__7839747](https://github.com/user-attachments/assets/ee6e5d9b-e0a1-4c8a-9a93-f04fb99e5ae3)
+2. Menurutmu, mana yang lebih baik antara XML dan JSON? Mengapa JSON lebih populer dibandingkan XML?
+Menurut saya, untuk pembuatan website saja, JSON lebih baik dibandingkan XML. Hal ini karena JSON lebih mudah dipahami, banyak bahasa pemrograman yang memiliki dukungan untuk membaca dan membuat JSON, serta berstuktur key dan value.
+
+3. Jelaskan fungsi dari method is_valid() pada form Django dan mengapa kita membutuhkan method tersebut?
+Method is_valid() pada form Django berfungsi untuk memastikan bahwa data yang dikirim user melalui form sesuai dengan aturan yang sudah didefinisikan di models.py. Jika tidak ada method tersebut, sembarang data dapat masuk ke database dan membuat error. 
+
+4. Mengapa kita membutuhkan csrf_token saat membuat form di Django? Apa yang dapat terjadi jika kita tidak menambahkan csrf_token pada form Django? Bagaimana hal tersebut dapat dimanfaatkan oleh penyerang?
+csrf_token atau Cross Site Request Forgery token melindungi semua POST. Token dimasukkan ke setiap form yang terdapat di template, lalu dicek oleh server ketika data dikirim. Hal ini memastikan bahwa data form hanya berasal dari form yang memang kita buat. Jika tidak menambahkan csrf_token pada form Django, secara otomoatis server akan menolak request dari POST. Tanpa CSRF token, penyerang bisa melakukan Cross Site Request Forgery attack. Misalnya, saat kita login ke sebuah website dan website tersebut menggunakan cookie untuk autentikasi, penyerang dapat membuat halaman berisi form tersembunyi yang jika dibuka saat masih login, browser otomatis mengirim request ke server toko online dengan cookie yang valid. Hasilnya, uang dapat tertransfer tanpa disadari.
+
+5. Penjelasan implementasi checklist secara step-by-step:
+
+1) Menambahkan 4 fungsi views baru 
+Pertama, pada views.py, import HttpResponse dan serializers. HttpResponse berfungsi untuk menyusun respon yang ingin dikembalikan oleh server ke user. Sedangkan, serializers akan digunakan untuk mentranslasikan model menjadi bentuk lain. Dalam hal ini, bentuk lain tersebut adalah xml dan json. Setelah itu, saya membuat fungsi:
+
+def show_xml(request):
+     product_list = Product.objects.all()
+     xml_data = serializers.serialize("xml", product_list)
+     return HttpResponse(xml_data, content_type="application/xml")
+
+def show_json(request):
+    product_list = Product.objects.all()
+    json_data = serializers.serialize("json", product_list)
+    return HttpResponse(json_data, content_type="application/json")
+
+product_list = Product.objects.all() 
+-> mengambil data dari tabel product di database yang hasilnya berupa quaryset.
+xml_data = serializers.serialize("xml", product_list) dan json_data = serializers.serialize("json", product_list) 
+-> Mengubah bentuk quaryset menjadi format xml dan json.
+return HttpResponse(xml_data, content_type="application/xml") dan return HttpResponse(json_data, content_type="application/json")
+-> Membungkus string XML dan JSON dalam HttpResponse supaya dapat dikirim ke browser.
+
+def show_xml_by_id(request, product_id):
+   try:
+        product_item = Product.objects.filter(pk=product_id)
+        xml_data = serializers.serialize("xml", product_item)
+        return HttpResponse(xml_data, content_type="application/xml")
+   except Product.DoesNotExist:
+       return HttpResponse(status=404)
+
+def show_json_by_id(request, product_id):
+   try:
+        product_item = Product.objects.get(pk=product_id)
+        json_data = serializers.serialize("json", [product_item])
+        return HttpResponse(json_data, content_type="application/json")
+   except Product.DoesNotExist:
+       return HttpResponse(status=404)
+
+Perbedaan dari kedua fungsi ini dari 2 fungsi sebelumnya adalah mengembalikan datanya menggunakan ID.
+product_item = Product.objects.filter(pk=product_id) 
+-> mencari data produk dengan primary key (pk) sama dengan product_id. Filter akan mengembalikan queryset, bukan data tunggal
+xml_data = serializers.serialize("xml", product_item) dan json_data = serializers.serialize("json", [product_item])
+-> Mengubah bentuk quaryset menjadi format xml dan json.
+return HttpResponse(xml_data, content_type="application/xml") dan return HttpResponse(json_data, content_type="application/json")
+-> Membungkus string XML dan JSON dalam HttpResponse supaya dapat dikirim ke browser.
+
+2) Membuat routing URL
+Sebelum menambahkan path, saya import semua fungsi yang sudah dibuat, yaitu show_xml, show_json, show_xml_by_id, show_json_by_id. Kemudian, saya menambahkan path :
+
+path('xml/', show_xml, name='show_xml')
+path('json/', show_json, name= 'show_json')
+path('xml/<uuid:product_id>/', show_xml_by_id, name='show_xml_by_id')
+path('json/<uuid:product_id>/', show_json_by_id, name='show_json_by_id')
+
+3) Membuat halaman yang menampilkan data objek model yang memiliki tombol "Add" yang akan redirect ke halaman form, serta tombol "Detail" pada setiap data objek model yang akan menampilkan halaman detail objek.
+Pada main.html, saya menambahkan tombol Add Product yang jika dipencet akan mengarah ke create_product yang terdapat di views.py. Lalu, di dalam loop produk, saya menambahkan tombol "Detail" yang mengarah ke show_products pada views.py. Dari create_product dan show_products, kedua fungsi ini akan me-render request ke create_product.html (untuk fungsi create_product) product_details.html (untuk fungsi show_products).
+
+4) Membuat halaman form untuk menambahkan objek model pada app sebelumnya.
+Pertama, saya membuat file create_product.html. Untuk menampilka form, saya menambahkan tag <form method="POST">, {% csrf_token %} untuk keamanan, dan {{ form.as_table }} untuk render form, serta menambahkan tombol submit 
+
+5) Membuat halaman yang menampilkan detail dari setiap data objek model.
+Pertama, saya membuat file product_detail.html. Di bagian atas, saya membuat tombol "Back to Catalog" yang jika diclick, akan kembali ke menu utama. Di bawahnya, saya menampilkan nama produk yang diikuti oleh kategori, label featured, dan tanggal produk dibuat, serta gambar thumbnail yang ditampilkan dengan ukuran lebar 300px. Selanjutnya, saya juga memasukkan deskripsi produk dan harga.
 
 
-3. Peran settings.py dalam proyek Django:
-Peran settings.py adalah sebagai konfigurasi utama yang isinya pengaturan aplikasi, seperti konfigurasi database, daftar aplikasi yang digunakan, middleware, template, zona waktu, bahasa,serta pengaturan keamanan. Secara singkat, settings.py menentukan bagaimana proyek Django dijalankan baik di lingkungan development maupun production.
-
-4. Bagaimana cara kerja migrasi database di Django?
-Ketika kita menjalankan python manage.py makemigrations, Django membaca perubahan pada model dan membuat file migrasi. Setelah itu, saat kita jalankan python manage.py migrate, Django akan mengeksekusi file migrasi tersebut ke database.
-
-5. Menurut saya Django menjadi framework yang digunakan untuk permulaan karena menggunakan bahasa python yang mudah dipahami pemula, menyediakan fitur bawaan sehingga tidak harus membuat kode dari awal, dan dapat beroprasi di berbagai OS (Windows, MacOS, dan Linux).
-
-link PWS : https://adryan-muhammad-sportcenter.pbp.cs.ui.ac.id
