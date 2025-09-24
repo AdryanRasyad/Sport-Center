@@ -1,3 +1,5 @@
+TUGAS 3 :  Implementasi Form dan Data Delivery pada Django
+
 1. Jelaskan mengapa kita memerlukan data delivery dalam pengimplementasian sebuah platform?
 Data delivery menjadi bagian yang esensial dalam implementasi sebuah platform. Data delivery memastikan agar interaksi data atau pertukaran data berjalan dengan benar. Tanpa data delivery, informasi hanya tersimpan, tidak bisa ditampilkan atau dimanfaatkan pada webiste. Selain itu, data delivery memastikan pertukaran informasi berlangsung cepat, aman, konsisten, dan efisien sehingga pengalaman pengguna menjadi lebih baik serta platform dapat tetap berjalan meski jumlah pengguna meningkat.
 
@@ -81,5 +83,56 @@ link pws : https://adryan-muhammad-sportcenter.pbp.cs.ui.ac.id
 <img width="1440" height="900" alt="Screenshot 2025-09-17 at 07 57 31" src="https://github.com/user-attachments/assets/4762edc7-b381-413f-bfc1-3b48cc205b18" />
 <img width="1440" height="900" alt="Screenshot 2025-09-17 at 07 55 56" src="https://github.com/user-attachments/assets/8edee3e4-bbab-45ec-8fa1-b2d35e25d582" />
 
+TUGAS 4 : Implementasi Autentikasi, Session, dan Cookies pada Django
 
+1. Django AuthenticationForm adalah form bawaan Django yang digunakan untuk proses login. Form ini ada di modul django.contrib.auth.forms yang berfungsi untuk meminta input username, password, serta melakukan validasi apakah kombinasi username dan password benar. kelebihan dari Django AuthenticationForm adalah tidak perlu membuat halaman login secara manual, keamanan yang baik, dan dapat dikustomisasi. Sedangkan, kekurangannya meliputi kesederhanaan cara login (hanya meminta username dan password) dan UI standar yang perlu dikostumisasi agar menarik.
 
+2. Autentikasi adalah proses yang memverifikasi identitas pengguna. Sedangkan, otorisasi adalah proses menentukan hak akses pengguna setelah mereka terautentikasi. Dalam Django, autentikasi diimplementasikan melalui django.contrib.auth yang menyediakan model User, fungsi authenticate(), login(), logout(), serta form seperti AuthenticationForm untuk menangani login. Sementara itu, otorisasi diwujudkan dengan sistem permission dan group, yang memungkinkan pengecekan izin menggunakan user.has_perm(), serta pembatasan akses dengan dekorator seperti @login_required dan @permission_required.
+
+3. Kelebihan dan Kekurangan :
+     1) Session:
+          - Kelebihan :
+               Mudah diakses langsung oleh browser, sistem keamanannya lebih baik, dan kapasitas penyimpanan lebih besar dari cookie
+          - Kekurangan :
+               Menambah beban server karena data harus dikelola di server dan dara bisa hilang jika server restart atau session expired.
+     2) Cookies
+          - Kelebihan :
+               Dapat menyimpan data lebih lama, tidak membebani server, cocok untuk menyimpan preferensi ringan.
+
+4. Penggunaan cookies tidak sepenuhnya aman secara default karena ada beberapa risiko potensial seperti cookie theft (pencurian cookie melalui XSS), session hijacking (penggunaan cookie session oleh pihak ketiga), atau session fixation (pemaksaan pengguna memakai cookie tertentu). Django menangani hal tersebut dengan mengaktifkan atribut HttpOnly (mencegah akses cookie yang melalui JavaScript), Secure (agar cookie hanya dikirim melalui HTTPS jika diaktifkan), serta dukungan CSRF protection dan signed cookies (menggunakan kunci rahasia).
+
+5. Langkah-langkah:
+     - Registrasi
+          1) Proses registrasi dimulai dengan import UserCreationForm dan messages pada views.py bawaan Django untuk menangani pendaftaran pengguna baru. Pada views.py, juga ditambahkan fungsi register. 
+          2) Buat file html baru bernama register.html yang berfungsi untuk menampilkan form pada web. 
+          3) Import register dan menambahkan path url ke dalam urlpatterns pada urls.py. 
+     - Login
+          1) Menambahkan import AuthenticationForm, authenticate, dan login pada view.py.
+          2) Menambahkan fungsi login_user pada views.py. 
+          3) Membuat file HTML baru dengan nama login.html yang berfungsi untuk menampilkan tampilan login untuk user.
+          4) Import login_user dan menambahkan path url ke dalam urlpatterns pada urls.py. 
+     - Logout
+          1) Menambahkan import logout pada views.py
+          2) Menambahkan fungsi logout_user
+          3) Menambahkan kode untuk button logout pada main.html setelah tombol add product
+          4) Import logout_user ke urls.py dan menambahkan path url ke urlpatters
+     Supaya halaman main dan details ter-restriksi, import login_required pad  views.py dan tambahkan dekorator @login_required(login_url='/login') di atas fungsi show_main dan show_product.
+
+     - Membuat dua (2) akun pengguna dengan masing-masing tiga (3) dummy data menggunakan model yang telah dibuat sebelumnya untuk setiap akun di lokal.
+          1) Register 2 akun pengguna
+          2) Login dengan username dan password yang sudah dibuat
+          3) Setelah masuk, tekan tombol "add product"
+          4) Isi nama barang, harga, deskripsi, jenis barang, is_featured, dan thumbnail
+          4) Tekan "Add product"
+          5) Lakukan secara berulang sampai 3 product dan ganti user yang belum dipakai untuk menambahkan product.
+     
+     - Menghubungkan model Product dengan User.
+          1) Menambahkan field user pada models.py 
+          2) Simpan request.user saat create product pada fungsi create_product views.py
+          3) Modifikasi template product_detail.html dengan menambahkan product.user.username
+     
+     - Menampilkan detail informasi pengguna yang sedang logged in seperti username dan menerapkan cookies seperti last_login pada halaman utama aplikasi.
+          1) Mengubah context pada show_main pada views.py -> 'name': request.user.username, 'last_login': request.COOKIES.get('last_login', 'Never')
+          2) Menampilkan last_login pada main.html dengan <h5>Sesi terakhir login: {{ last_login }}</h5>
+
+          
