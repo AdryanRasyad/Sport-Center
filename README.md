@@ -135,4 +135,53 @@ TUGAS 4 : Implementasi Autentikasi, Session, dan Cookies pada Django
           1) Mengubah context pada show_main pada views.py -> 'name': request.user.username, 'last_login': request.COOKIES.get('last_login', 'Never')
           2) Menampilkan last_login pada main.html dengan <h5>Sesi terakhir login: {{ last_login }}</h5>
 
+TUGAS 5
+
+1.  Jika terdapat beberapa CSS selector untuk suatu elemen HTML, jelaskan urutan prioritas pengambilan CSS selector tersebut!
+     Jika terdapat beberapa CSS selector untuk suatu elemen HTML, maka prioritas utama adalah jika ada !important. Prioritas kedua adalah Inline Style di mana style diaplikasikan sebaris dengan elemen HTML yang bersangkutan. Ketiga adalah selector yang menargetkan elemen berdasarkan id uniknya. ID bersifat unik, hanya boleh ada satu nama ID yang sama per halaman. Prioritas berikutnya diikuti dengan class (Menargetkan elemen dengan class tertentu.), atribut (Menargetkan elemen berdasarkan atributnya.), dan pseudo-class (Menargetkan elemen dalam keadaan tertentu).
+2. Mengapa responsive design menjadi konsep yang penting dalam pengembangan aplikasi web? Berikan contoh aplikasi yang sudah dan belum menerapkan responsive design, serta jelaskan mengapa!
+     Responsive design menjadi konsep yang penting karena pengguna sekarang mengakses web dari berbagai perangkat. Apabila tampilan tidak menyesuaikan, pengguna bisa kesulitan membaca, menekan tombol, atau mengakses fitur. Akibatnya, user bisa cepat meninggalkan aplikasi (bounce rate tinggi).
+     1) Contoh Aplikasi yang sudah menerapkan Responsive Design :
+     - Tokopedia
+     Jika dibuka di HP, tampilannya menyesuaikan dengan layar kecil, menampilkan ikon besar dan navigasi yang lebih sederhana. Sedankgan, jika dibuka di laptop, layout grid produk lebih lebar dan detail.
+     2) Contoh Aplikasi yang belum menerapkan Responsive Design:
+     - Pacil Web Service
+     Jika dibuka di HP, tampilannya tidak menyesuaikan dengan layar kecil. Pengguna menjadi terganggu saat ingin aktivitas dalam web tersebut.
+
+3. Jelaskan perbedaan antara margin, border, dan padding, serta cara untuk mengimplementasikan ketiga hal tersebut!
+     Margin, border, dan padding adalah tiga konsep penting dalam CSS box model yang mengatur ruang di sekitar elemen HTML. Margin adalah ruang kosong di luar elemen yang memisahkan elemen tersebut dengan elemen lain di sekitarnya, sehingga berfungsi sebagai jarak antar elemen. Border adalah garis tepi yang membungkus konten dan padding, bisa memiliki ketebalan, warna, serta gaya (solid, dashed, dotted, dll.) untuk memperjelas batas elemen. Padding adalah ruang kosong di dalam elemen, tepat di antara konten (teks atau gambar) dan border yang berfungsi agar konten tidak menempel langsung pada tepi.
+     Cara implementasi :
+     .box {
+          margin: 20px;         // jarak luar elemen
+          border: 2px solid black;  // garis tepi hitam dengan ketebalan 2px 
+          padding: 15px;        // jarak dalam antara konten dan border 
+     }
+
+4. Jelaskan konsep flex box dan grid layout beserta kegunaannya!
+     Flexbox dan Grid Layout adalah dua sistem layout modern dalam CSS yang dirancang untuk mempermudah pengaturan posisi dan tata letak elemen di halaman web.
+     1) Flexbox (Flexible Box Layout):
+     Flexbox berfungsi untuk mengatur elemen dalam satu dimensi, yaitu baris (row) atau kolom (column). Konsep utamanya adalah membuat distribusi ruang yang fleksibel sehingga elemen dapat menyesuaikan ukuran layar secara otomatis. Flexbox cocok digunakan untuk mengatur item dalam navigasi, tombol, kartu produk, atau komponen yang tersusun dalam satu garis. 
+     2) Grid Layout:
+     Grid Layout memungkinkan pengaturan elemen dalam dua dimensi, yaitu baris (rows) dan kolom (columns) secara bersamaan. Dengan grid, kita bisa membagi halaman menjadi area-area tertentu, misalnya header, sidebar, content, dan footer, dengan kontrol yang presisi. Grid cocok dipakai untuk membangun struktur layout kompleks, seperti dashboard atau halaman majalah online.
+
+5. Langkah-Langkah:
+     - Implementasikan fungsi untuk menghapus dan mengedit product.
+          1) Modifikasi views.py dengan menambahkan edit_product dan delete_product
+          2) Menambahkan URL di urls.py untuk fungsi edit_product dan delete_product
+          3) Membuat file edit_product.html untuk menampilkan halaman untuk edit product dan file 
+          4) Tambahkan href link untuk edit product dan delete product.
+     - Kustomisasi halaman login, register, tambah product, edit product, dan detail product semenarik mungkin.
+          Menambahkan css pada login.html, register.html, create_product.html, edit_product.html, dan product_details.html seperti yang ada pada file tersebut.
+     - Kustomisasi halaman daftar product menjadi lebih menarik dan responsive. Kemudian, perhatikan kondisi berikut:
+          menggunakan pseudo-class CSS :hover yang memungkinkan perubahan gaya ketika kursor berada di atas elemen. Saya juga menggabungkannya dengan transition supaya fade-nya lebih halus.
+     - Jika pada aplikasi belum ada product yang tersimpan, halaman daftar product akan menampilkan gambar dan pesan bahwa belum ada product yang terdaftar dan Jika sudah ada product yang tersimpan, halaman daftar product akan menampilkan detail setiap product dengan menggunakan card
+          Menggunakan if dengan syarat apabila ada product yang tersimpan, maka tampilkan. Pesan ditampilkan beserta gambar bola yang terletak di static/image/bola.png
+     - Untuk setiap card product, buatlah dua buah button untuk mengedit dan menghapus product pada card tersebut!
+          Untuk menambahkan dua buah tombol Edit dan Hapus pada setiap card produk, langkah pertama adalah menempatkan elemen tombol di dalam card_product.html
+     - Buatlah navigation bar (navbar) untuk fitur-fitur pada aplikasi yang responsive terhadap perbedaan ukuran device, khususnya mobile dan desktop.
+          saya sudah membuat sebuah navigation bar (navbar) yang responsif dengan memanfaatkan Tailwind CSS dan sedikit JavaScript. Pada tampilan desktop (layar medium ke atas), menu navigasi ditampilkan dalam bentuk horizontal dengan link seperti Home dan Create Product, serta bagian user yang menampilkan identitas pengguna atau tombol Login/Register sesuai status autentikasi. Sementara itu, untuk tampilan mobile (layar kecil), menu utama disembunyikan dan diganti dengan tombol “hamburger” yang muncul di sisi kanan. Tombol ini dikendalikan oleh JavaScript sederhana yang menggunakan classList.toggle("hidden") untuk menampilkan atau menyembunyikan menu mobile. Bagian menu mobile juga menampilkan link navigasi dan user section, tetapi dengan layout vertikal yang lebih cocok untuk layar kecil.
+
+
+
+
           

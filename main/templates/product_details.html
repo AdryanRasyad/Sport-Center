@@ -1,41 +1,51 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<p>
-  <a href="{% url 'main:show_main' %}">
-    <button>← Back to Catalog</button>
-  </a>
-</p>
+<div class="max-w-4xl mx-auto py-8 px-4">
+    
+    <!-- Tombol kembali -->
+    <a href="{% url 'main:show_main' %}" 
+    class="flex items-center text-gray-600 hover:text-gray-800 mb-6">
+        ← Back to Products
+    </a>
 
-<h1>{{ product.name }}</h1>
+    <!-- Card Produk -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
+        
+        <!-- Kategori + Tanggal -->
+        <div class="p-4 flex items-center space-x-4">
+            <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-0.5 rounded">
+                {{ product.category }}
+            </span>
+            <span class="text-sm text-gray-500">{{ product.created_at|date:"M d, Y H:i A" }}</span>
+            <span class="text-sm text-gray-500">views</span>
+        </div>
 
+        <!-- Gambar Produk -->
+        <img src="{{ product.thumbnail|default:'/static/image/bola.png' }}"
+             alt="{{ product.name }}"
+             class="w-full object-cover">
 
-<p>
-  <b>{{ product.get_category_display }}</b>
-  {% if product.is_featured %}
-    | <b>Featured</b>
-  {% endif %}
-  | <i>{{ product.created_at|date:"d M Y, H:i" }}</i>
-</p>
+        <!-- Detail Produk -->
+        <div class="p-6">
+            <!-- Nama Produk -->
+            <h1 class="text-2xl font-bold mb-2">{{ product.name }}</h1>
 
+            <!-- Deskripsi -->
+            <p class="text-gray-600 mb-4">{{ product.description }}</p>
 
-{% if product.thumbnail %}
-  <img src="{{ product.thumbnail }}" alt="Product thumbnail" width="300">
-  <br><br>
-{% endif %}
+            <!-- Harga -->
+            <p class="text-xl font-semibold text-green-600 mb-4">
+                Rp {{ product.price }}
+            </p>
+        </div>
 
-
-<p>{{ product.description }}</p>
-
-
-<p><b>Price:</b> Rp {{ product.price }}</p>
-
-{% if product.user %}
-    <p>Author: {{ product.user.username }}</p>
-{% else %}
-    <p>Author: Anonymous</p>
-{% endif %}
-
-{% endblock content %}
-
-
+        <!-- Author -->
+        <div class="border-t p-4">
+            <p class="text-sm text-gray-800">
+                <strong>Author:</strong> {{ product.user }}
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
