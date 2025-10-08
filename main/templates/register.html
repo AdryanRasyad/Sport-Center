@@ -115,4 +115,36 @@
     </div>
   </div>
 </div>
+<button
+  onclick="showToast('Sample Title', 'This is a sample message for the toast notification.')"
+>
+  Click to Show Toast
+</button>
+{% if messages %}
+  <div id="django-messages"
+       data-messages='[
+         {% for msg in messages %}
+           {"title": "{{ msg.tags|capfirst|escapejs }}",
+            "message": "{{ msg|escapejs }}",
+            "type": "{{ msg.tags|escapejs }}"}
+           {% if not forloop.last %},{% endif %}
+         {% endfor %}
+       ]'>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const msgContainer = document.getElementById('django-messages');
+      if (msgContainer) {
+        try {
+          const msgs = JSON.parse(msgContainer.dataset.messages);
+          msgs.forEach(m => showToast(m.title, m.message, m.type));
+        } catch (err) {
+          console.error("Error parsing Django messages:", err);
+        }
+      }
+    });
+  </script>
+{% endif %}
+
 {% endblock content %}

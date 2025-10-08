@@ -23,7 +23,7 @@ class Product(models.Model):
 
     
     def __str__(self):
-        return self.title
+        return self.name
     
     def increment_views(self):
         self.views += 1

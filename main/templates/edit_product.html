@@ -23,7 +23,7 @@
         <p class="text-gray-600">Keep your football items up to date.</p>
       </div>
       
-      <form method="POST" class="space-y-6">
+      <form id="edit-product-form" method="POST" class="space-y-6">
         {% csrf_token %}
         {% for field in form %}
           <div>
@@ -54,4 +54,64 @@
     </div>
   </div>
 </div>
+
+<script>
+  const form = document.getElementById("edit-product-form");
+
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const productId = "{{ form.instance.id }}"; // ambil ID dari produk yang sedang di-edit
+
+      try {
+        const response = await fetch(`/products/${productId}/edit`, {
+          method: "POST",
+          headers: { "X-CSRFToken": formData.get("csrfmiddlewaretoken") },
+          body: formData,
+        });
+
+        if (!response.ok) throw new Error("Failed to update product");
+
+        showToast("Product Updated", "Your product was successfully updated!", "info");
+
+        // Optional redirect ke detail produk
+        setTimeout(() => {
+          window.location.href = `/products/${productId}/`;
+        }, 1500);
+      } catch (error) {
+        console.error("Update error:", error);
+        showToast("Update Failed", "An error occurred while updating the product.", "error");
+      }
+    });
+  }
+</script>
+{% if messages %}
+  <div id="django-messages"
+       data-messages='[
+         {% for msg in messages %}
+           {"title": "{{ msg.tags|capfirst|escapejs }}",
+            "message": "{{ msg|escapejs }}",
+            "type": "{{ msg.tags|escapejs }}"}
+           {% if not forloop.last %},{% endif %}
+         {% endfor %}
+       ]'>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const msgContainer = document.getElementById('django-messages');
+      if (msgContainer) {
+        try {
+          const msgs = JSON.parse(msgContainer.dataset.messages);
+          msgs.forEach(m => showToast(m.title, m.message, m.type));
+        } catch (err) {
+          console.error("Error parsing Django messages:", err);
+        }
+      }
+    });
+  </script>
+{% endif %}
+
 {% endblock %}
