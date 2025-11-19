@@ -12,6 +12,54 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.utils.html import strip_tags
 import datetime
+import requests
+import json
+
+
+@csrf_exempt
+def create_product_flutter(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        name = strip_tags(data.get("name", ""))  # Strip HTML tags
+        price = int(data.get("price", 0))
+        description = strip_tags(data.get("description", ""))  # Strip HTML tags
+        category = data.get("category", "")
+        thumbnail = data.get("thumbnail", "")
+        is_featured = data.get("is_featured", False)
+        user = request.user
+        
+        new_product = Product(
+            name=name, 
+            price=price,
+            description=description,
+            category=category,
+            thumbnail=thumbnail,
+            is_featured=is_featured,
+            user=user
+        )
+        new_product.save()
+        
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
+
+def proxy_image(request):
+    image_url = request.GET.get('url')
+    if not image_url:
+        return HttpResponse('No URL provided', status=400)
+    
+    try:
+        # Fetch image from external source
+        response = requests.get(image_url, timeout=10)
+        response.raise_for_status()
+        
+        # Return the image with proper content type
+        return HttpResponse(
+            response.content,
+            content_type=response.headers.get('Content-Type', 'image/jpeg')
+        )
+    except requests.RequestException as e:
+        return HttpResponse(f'Error fetching image: {str(e)}', status=500)
 
 
 def register(request):
@@ -23,6 +71,10 @@ def register(request):
             form.save()
             messages.success(request, "Account created successfully! Please log in.")
             return redirect("main:login")
+        else:
+            # Log form errors to console for debugging and show a helpful message
+            print("[register] form errors:", form.errors.as_json())
+            messages.error(request, "Registration failed. Please fix the errors shown below.")
 
     context = {'form': form}
     return render(request, "register.html", context)
@@ -196,3 +248,23 @@ def show_json_by_id(request, product_id):
         return JsonResponse(data)
     except Product.DoesNotExist:
         return JsonResponse({'detail': 'Not found'}, status=404)
+    
+def show_json_my_products(request):
+    product_list = Product.objects.filter(user=request.user)
+    data = [
+        {
+            'id': str(p.id),
+            'name': p.name,
+            'price': p.price,
+            'description': p.description,
+            'category': p.category,
+            'thumbnail': p.thumbnail,
+            'views': p.views,
+            'created_at': p.created_at.isoformat() if p.created_at else None,
+            'is_featured': p.is_featured,
+            'user_id': p.user_id,
+            'user_username': p.user.username if p.user else None,
+        }
+        for p in product_list
+    ]
+    return JsonResponse(data, safe=False)
